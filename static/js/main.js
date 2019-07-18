@@ -8,6 +8,8 @@
 
 'use strict';
 
+// Put variables in global scope to make them available to the browser console.
+const video = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
 const selectors = [videoSelect];
 
@@ -40,8 +42,7 @@ function gotDevices(deviceInfos) {
 
 navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 
-// Put variables in global scope to make them available to the browser console.
-const video = document.querySelector('video');
+
 const canvas = window.canvas = document.querySelector('canvas');
 canvas.width = 480;
 canvas.height = 360;
@@ -68,7 +69,11 @@ function handleError(error) {
 }
 
 function start() {
-
+  if (window.stream) {
+    window.stream.getTracks().forEach(track => {
+      track.stop();
+    });
+  }
   const videoSource = videoSelect.value;
   const constraints = {
     audio: false,
