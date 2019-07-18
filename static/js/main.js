@@ -55,15 +55,11 @@ button.onclick = function() {
 
 };
 
-const videoSource = videoSelect.value;
-const constraints = {
-  audio: false,
-  video: {deviceId: videoSource ? {exact: videoSource} : undefined}
-};
 
-function handleSuccess(stream) {
+function gotStream(stream) {
   window.stream = stream; // make stream available to browser console
   video.srcObject = stream;
+  return navigator.mediaDevices.enumerateDevices();
 }
 
 function handleError(error) {
@@ -71,9 +67,24 @@ function handleError(error) {
   console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
-navigator.mediaDevices.getUserMedia(constraints).then(handleSuccess).catch(handleError);
+function start() {
+
+  const videoSource = videoSelect.value;
+  const constraints = {
+    audio: false,
+    video: {deviceId: videoSource ? {exact: videoSource} : undefined}
+  };
+  navigator.mediaDevices.getUserMedia(constraints).then(gotStream).then(gotDevices).catch(handleError);
+}
+
 
 function prepareImg() {
 	var canvasData = canvas.toDataURL("image/png");
    	document.getElementById('image_input').value = canvasData;
 }
+
+
+
+videoSelect.onchange = start;
+
+start();
