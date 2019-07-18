@@ -67,6 +67,7 @@ function handleSuccess(stream) {
 }
 
 function handleError(error) {
+  alert(`Error: ${error.message}`);
   console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
 }
 
