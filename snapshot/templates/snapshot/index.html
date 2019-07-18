@@ -24,6 +24,7 @@
 
 
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
 
 
 </head>
@@ -39,29 +40,17 @@
     <button>Take snapshot</button>
     <canvas id="canv"></canvas>
 
-    <p>Draw a frame from the video onto the canvas element using the <code>drawImage()</code> method.</p>
-
-    <p>The variables <code>canvas</code>, <code>video</code> and <code>stream</code> are in global scope, so you can
-        inspect them from the console.</p>
-
-    <a href="https://github.com/webrtc/samples/tree/gh-pages/src/content/getusermedia/canvas"
-       title="View source for this page on GitHub" id="viewSource">View source on GitHub</a>
-
-
-<form method="POST" enctype="multipart/form-data" action="">
-{% csrf_token %}
-  <input id="image_input" name="image_input" type="hidden" value="">
-  <input type="submit" value="Upload File" name="submit" />
-</form>
+	<form method="POST" enctype="multipart/form-data" action="">
+	{% csrf_token %}
+	  <input id="image_input" name="image_input" type="hidden" value="">
+	  <input type="submit" value="Upload Image" name="submit" />
+	</form>
 
 
 </div>
 
- 
-
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-
 <script src="{% static 'js/main.js' %}" async></script>
 
 </body>
