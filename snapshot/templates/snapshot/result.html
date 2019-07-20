@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<!--
+ *  Copyright (c) 2015 The WebRTC project authors. All Rights Reserved.
+ *
+ *  Use of this source code is governed by a BSD-style license
+ *  that can be found in the LICENSE file in the root of the source
+ *  tree.
+-->
+<html>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="description" content="Recognize license plate">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Recognize license plate">
+    <meta itemprop="name" content="Recognize license plate">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <title>Recognize license plate</title>
+
+
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+
+
+</head>
+
+<body>
+    <h1 style="text-align: center;">
+        Results
+    </h1>
+
+    
+    <div class="center">
+    	
+    	<ul>
+    		<li>Work ID: {{ work_id }}</li>
+    		<li>Message: {{ msg }}</li>
+    		<li>Car: {{ car }}</li>
+    		<li>License plate: {{ license_plate }}</li>
+    	</ul>
+    </div>
+
+
+</body>
+</html>

@@ -2,7 +2,6 @@ import json
 
 from django.views.generic import View
 from django.shortcuts import render
-from django.http import HttpResponse
 
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -27,14 +26,19 @@ class Home(View):
 
 
 class Result(View):
+    template_name = 'snapshot/result.html'
 
     def get(self, request, *args, **kwargs):
         result = get_result(kwargs.get('work_id'))
         parsed_data = json.loads(result)
+        parsed_data.update(
+            {'work_id': kwargs.get('work_id')}
+        )
         if parsed_data.get('code') == 'SUCCESSFUL':
             data = {
+                'work_id': parsed_data.get('work_id'),
                 'car': parsed_data.get('car'),
                 'license_plate': parsed_data.get('license_plate'),
             }
-            return HttpResponse(json.dumps(data))
-        return HttpResponse(result)
+            return render(request, self.template_name, data)
+        return render(request, self.template_name, parsed_data)
