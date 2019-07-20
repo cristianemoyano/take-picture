@@ -39,6 +39,7 @@ class Result(View):
                 'work_id': parsed_data.get('work_id'),
                 'car': parsed_data.get('car'),
                 'license_plate': parsed_data.get('license_plate'),
+                'msg': parsed_data.get('msg'),
             }
             return render(request, self.template_name, data)
         return render(request, self.template_name, parsed_data)
