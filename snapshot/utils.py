@@ -128,5 +128,5 @@ def set_key(key, value):
 
 def get_key(key):
     client = getRedisClient()
-    value = client.get('key')
+    value = client.get(key)
     return value
