@@ -120,7 +120,7 @@ def get_result(work_id):
     return "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
 
 
-def getRedisClient(url):
+def getRedisClient(url=None):
     if url:
         r = redis.Redis.from_url(url)
     else:
