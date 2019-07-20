@@ -64,23 +64,20 @@ def upload_image_remote(data):
     return upload_file_dropbox_and_get_public_url(path_file, fs.name)
 
 
-def upload(filename):
-    api_url = 'http://patent-recognizer.herokuapp.com/'
-    with open(filename, 'rb') as file:
-        multipart_data = MultipartEncoder(
-            fields={
-                '': (filename, file, 'image/png'),
-            },
-        )
-        r = requests.post(api_url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
-    response = {
-        'status_code': r.status_code,
-        'response': r.text,
-    }
-    return json.dumps(response)
-
-
 def recognize_license_place(url):
+    def parse_response(response):
+        text = response.text
+        if text:
+            return {
+                'license_place': text.get('plate'),
+                'status_code': response.status_code,
+                'response': response.text,
+            }
+        return {
+            'license_place': 'Not recognized.',
+            'status_code': response.status_code,
+            'response': response.text,
+        }
     api_url = 'http://patent-recognizer.herokuapp.com/'
     with urlopen(url) as file:
         multipart_data = MultipartEncoder(
@@ -88,12 +85,8 @@ def recognize_license_place(url):
                 '': (FILE_NAME, file.read(), 'image/png'),
             },
         )
-        r = requests.post(api_url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
-    response = {
-        'status_code': r.status_code,
-        'response': r.text,
-    }
-    return json.dumps(response)
+        response = requests.post(api_url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
+    return json.dumps(parse_response(response))
 
 
 def upload_image_and_recognize_license_place(data):
