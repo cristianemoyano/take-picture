@@ -7,6 +7,9 @@ redis:
 celery:
 	celery worker --app=core.celery -l info
 
+shell:
+	python manage.py shell
+
 e:
 	source env/bin/activate
 
