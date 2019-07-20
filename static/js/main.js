@@ -13,7 +13,6 @@ const video = document.querySelector('video');
 const videoSelect = document.querySelector('select#videoSource');
 const selectors = [videoSelect];
 
-
 function gotDevices(deviceInfos) {
   // Handles being called several times to update labels. Preserve values.
   const values = selectors.map(select => select.value);
@@ -47,13 +46,13 @@ const canvas = window.canvas = document.querySelector('canvas');
 canvas.width = 480;
 canvas.height = 360;
 
-const button = document.querySelector('button');
-button.onclick = function() {
+const takeSnapshot = document.getElementById('takeSnapshot');
+takeSnapshot.onclick = function() {
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
   prepareImg();
-
+  canvas.scrollIntoView();
 };
 
 
@@ -89,7 +88,29 @@ function prepareImg() {
 }
 
 
+const toggleVideo = document.getElementById('toggleVideo');
+toggleVideo.onclick = function() {
+  video.srcObject.getTracks().forEach(track => {
+      if (track.enabled === true) {
+        track.enabled = false;
+        toggleVideo.innerHTML = "<img width='20px' margin='1px' src='https://cdn0.iconfinder.com/data/icons/video-conference-1/24/Disable-Camera_2-512.png'>";
+      } else {
+        track.enabled = true;
+        toggleVideo.innerHTML = "<img width='20px' margin='1px' src='https://cdn3.iconfinder.com/data/icons/video-meeting-2/24/enable_camera_video_meeting_conference_online-512.png'>";
+      }
+  });
+};
+
+const clearSnap = document.getElementById('clearSnap');
+clearSnap.onclick = function() {
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  video.scrollIntoView();
+
+}
 
 videoSelect.onchange = start;
 
 start();
+
+
+

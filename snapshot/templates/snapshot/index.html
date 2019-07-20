@@ -11,16 +11,16 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="description" content="WebRTC code samples">
+    <meta name="description" content="Recognize license plate">
     <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="name" content="WebRTC code samples">
+    <meta itemprop="description" content="Recognize license plate">
+    <meta itemprop="name" content="Recognize license plate">
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
 
     <base target="_blank">
 
-    <title>getUserMedia to canvas</title>
+    <title>Recognize license plate</title>
 
 
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
@@ -30,31 +30,32 @@
 </head>
 
 <body>
-
-<div id="container">
-
-    <h1><a href="//webrtc.github.io/samples/" title="WebRTC samples homepage">WebRTC samples</a> <span>getUserMedia ⇒ canvas</span>
+    <h1 style="text-align: center;">
+        Recognize license plate
     </h1>
 
     <video playsinline autoplay></video>
-     <div class="select">
-        <label for="videoSource">Video source: </label><select id="videoSource"></select>
+    <div class="center">
+        <button id="toggleVideo">
+            <img width="20px" margin="1px" src="https://cdn3.iconfinder.com/data/icons/video-meeting-2/24/enable_camera_video_meeting_conference_online-512.png">
+        </button>
+        <div class="select" class="custom-select">
+            <label for="videoSource">Video source: </label><select id="videoSource"></select>
+        </div>
+        <p id="error" class="warning"></p>
+        <button id="takeSnapshot">Take snapshot</button>
+
     </div>
-    <button>Take snapshot</button>
     <canvas id="canv"></canvas>
-
-	<form method="POST" enctype="multipart/form-data" action="">
-	{% csrf_token %}
-	  <input id="image_input" name="image_input" type="hidden" value="">
-	  <input type="submit" value="Upload Image" name="submit" />
-	</form>
-
-	<p id="error"></p>
-
-
-</div>
-
-
+    <div class="center">
+    	<form method="POST" enctype="multipart/form-data" action="">
+    	{% csrf_token %}
+    	  <input id="image_input" name="image_input" type="hidden" value="">
+    	  <input type="submit" value=" Recognize " name="submit" class="upload" />
+    	</form>
+        <br>
+        <button style="background-color: #ccc;" id="clearSnap">Reset</button>
+    </div>
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script src="{% static 'js/main.js' %}" async></script>
 

@@ -1,23 +1,19 @@
 import base64
-import requests
+
 from PIL import Image
 from io import BytesIO
+
 from django.views.generic import View
 from django.shortcuts import render
 from django.http import HttpResponse
-from requests_toolbelt.multipart.encoder import MultipartEncoder
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
-def upload(filename):
-    api_url = 'http://patent-recognizer.herokuapp.com/'
-    with open(filename, 'rb') as file:
-        multipart_data = MultipartEncoder(
-            fields={
-                '': (filename, file, 'image/png'),
-            },
-        )
-        r = requests.post(api_url, data=multipart_data, headers={'Content-Type': multipart_data.content_type})
-    return r
+from snapshot.utils import get_result, set_key
+from snapshot.tasks import upload_task
+
+snapshot_key = 'snapshot:work_id'
 
 
 class Home(View):
@@ -31,5 +27,13 @@ class Home(View):
         image = Image.open(BytesIO(base64.b64decode(data)))
         filename = "img.png"
         image.save(filename, "PNG")
-        response = upload(filename)
-        return HttpResponse(response)
+        work = upload_task.delay(filename)
+        set_key(snapshot_key, work.id)
+        return HttpResponseRedirect(reverse('snapshot:result', kwargs={'work_id': work.id}))
+
+
+class Result(View):
+
+    def get(self, request, *args, **kwargs):
+        result = get_result(kwargs.get('work_id'))
+        return HttpResponse(result)
