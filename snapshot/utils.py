@@ -72,7 +72,7 @@ def get_car(license_plate):
         car = Car.objects.get(license_plate=license_plate)
         return car
     except Car.DoesNotExist:
-        return None
+        return 'License plate not found.'
 
 
 def recognize_license_plate(url):
@@ -83,16 +83,22 @@ def recognize_license_plate(url):
             set_key(LICENSE_PLATE_KEY, license_plate)
             car = get_car(license_plate)
             return {
+                'code': 'SUCCESSFUL',
+                'msg': 'License plate recognized.',
                 'car': str(car),
                 'license_plate': license_plate,
                 'status_code': response.status_code,
                 'response': data,
             }
         return {
-            'license_plate': 'Not recognized.',
+            'code': 'NOT_RECOGNIZED',
+            'msg': 'Not recognized.',
+            'car': 'None',
+            'license_plate': 'None',
             'status_code': response.status_code,
             'response': data,
         }
+
     api_url = 'http://patent-recognizer.herokuapp.com/'
     with urlopen(url) as file:
         multipart_data = MultipartEncoder(
@@ -116,8 +122,17 @@ def get_result(work_id):
             result = work.get(timeout=1)
             return result
         except Exception as e:
+            error = {
+                'code': 'ERROR',
+                'msg': "An error ocurred. Plase, try again."
+            }
             logging.exception(e, exc_info=True)
-    return "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
+            return json.dumps(error)
+    default = {
+        'code': 'NO_READY',
+        'msg': "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
+    }
+    return json.dumps(default)
 
 
 def getRedisClient(url=None):

@@ -1,3 +1,5 @@
+import json
+
 from django.views.generic import View
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -28,4 +30,11 @@ class Result(View):
 
     def get(self, request, *args, **kwargs):
         result = get_result(kwargs.get('work_id'))
+        parsed_data = json.loads(result)
+        if parsed_data.get('code') == 'SUCCESSFUL':
+            data = {
+                'car': parsed_data.get('car'),
+                'license_plate': parsed_data.get('license_plate'),
+            }
+            return HttpResponse(json.dumps(data))
         return HttpResponse(result)
