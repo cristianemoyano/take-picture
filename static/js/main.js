@@ -46,6 +46,8 @@ const canvas = window.canvas = document.querySelector('canvas');
 canvas.width = 480;
 canvas.height = 360;
 
+const recognizeBtn = document.getElementById('recognize');
+
 const takeSnapshot = document.getElementById('takeSnapshot');
 takeSnapshot.onclick = function() {
   canvas.width = video.videoWidth;
@@ -62,10 +64,6 @@ function gotStream(stream) {
   return navigator.mediaDevices.enumerateDevices();
 }
 
-function handleError(error) {
-  document.getElementById('error').innerHTML = `Error: ${error.message}`;
-  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
-}
 
 function start() {
   if (window.stream) {
@@ -106,6 +104,14 @@ clearSnap.onclick = function() {
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   video.scrollIntoView();
 
+}
+
+function handleError(error) {
+  document.getElementById('error').innerHTML = `Error: ${error.message}`;
+  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+  takeSnapshot.disabled = true;
+  recognizeBtn.disabled = true;
+  toggleVideo.disabled  = true;
 }
 
 videoSelect.onchange = start;

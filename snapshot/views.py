@@ -1,6 +1,7 @@
 import json
 
 from django.views.generic import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 
 from django.http import HttpResponseRedirect
@@ -12,7 +13,7 @@ from snapshot.tasks import recognize_license_plate_task
 snapshot_key = 'snapshot:work_id'
 
 
-class Home(View):
+class Home(LoginRequiredMixin, View):
     template_name = 'snapshot/index.html'
 
     def get(self, request, *args, **kwargs):
@@ -25,7 +26,7 @@ class Home(View):
         return HttpResponseRedirect(reverse('snapshot:result', kwargs={'work_id': work.id}))
 
 
-class Result(View):
+class Result(LoginRequiredMixin, View):
     template_name = 'snapshot/result.html'
 
     def get(self, request, *args, **kwargs):

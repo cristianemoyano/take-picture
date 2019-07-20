@@ -6,5 +6,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     url(r'', include('snapshot.urls', namespace='snapshot')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

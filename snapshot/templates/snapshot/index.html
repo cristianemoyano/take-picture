@@ -18,14 +18,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta id="theme-color" name="theme-color" content="#ffffff">
 
-    <base target="_blank">
-
     <title>Recognize license plate</title>
-
 
     <link href="//fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-
 
 </head>
 
@@ -33,6 +29,16 @@
     <h1 style="text-align: center;">
         Recognize license plate
     </h1>
+
+    <h2>
+        {% if user.is_authenticated %}
+            Hi {{ user.username }}!
+            <p><a href="{% url 'logout' %}">logout</a></p>
+        {% else %}
+          <p>You are not logged in</p>
+          <a href="{% url 'login' %}">login</a>
+        {% endif %}
+    </h2>
 
     <video playsinline autoplay></video>
     <div class="center">
@@ -51,7 +57,7 @@
     	<form method="POST" enctype="multipart/form-data" action="">
     	{% csrf_token %}
     	  <input id="image_input" name="image_input" type="hidden" value="">
-    	  <input type="submit" value=" Recognize " name="submit" class="upload" />
+    	  <input id="recognize" type="submit" value="Recognize" name="submit" class="upload" />
     	</form>
         <br>
         <button style="background-color: #ccc;" id="clearSnap">Reset</button>
