@@ -7,6 +7,8 @@ import redis
 from celery.result import AsyncResult
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
+import logging
+
 
 def upload(filename):
     api_url = 'http://patent-recognizer.herokuapp.com/'
@@ -30,8 +32,8 @@ def get_result(work_id):
         try:
             result = work.get(timeout=1)
             return result
-        except Exception:
-            pass
+        except Exception as e:
+            logging.exception(e, exc_info=True)
     return "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
 
 
