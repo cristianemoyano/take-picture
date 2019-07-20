@@ -10,6 +10,15 @@ celery:
 shell:
 	python manage.py shell
 
+migrations:
+	python manage.py makemigrations
+
+migrate:
+	python manage.py migrate
+
+superuser:
+	python manage.py createsuperuser
+
 e:
 	source env/bin/activate
 
@@ -24,3 +33,12 @@ h-deploy:
 
 h-shell:
 	heroku run bash
+
+h-migrations:
+	heroku run python manage.py makemigrations
+
+h-migrate:
+	heroku run python manage.py migrate
+
+h-superuser:
+	heroku run python manage.py createsuperuser

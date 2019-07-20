@@ -13,6 +13,8 @@ import dropbox
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 import redis
+
+from snapshot.models import Car
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 PUBLIC_URL_KEY = 'snapshot:public_url'
@@ -65,13 +67,23 @@ def upload_image_remote(data):
     return upload_file_dropbox_and_get_public_url(path_file, fs.name)
 
 
+def get_car(license_plate):
+    try:
+        car = Car.objects.get(license_plate=license_plate)
+        return car
+    except Car.DoesNotExist:
+        return None
+
+
 def recognize_license_plate(url):
     def parse_response(response):
         data = response.json()
         if data:
             license_plate = data[0].get('plate')
             set_key(LICENSE_PLATE_KEY, license_plate)
+            car = get_car(license_plate)
             return {
+                'car': str(car),
                 'license_plate': license_plate,
                 'status_code': response.status_code,
                 'response': data,
@@ -108,12 +120,15 @@ def get_result(work_id):
     return "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
 
 
-def getRedisClient():
-    redis_url = os.getenv('REDIS_URL', None)
-    if redis_url:
-        r = redis.Redis.from_url(redis_url)
+def getRedisClient(url):
+    if url:
+        r = redis.Redis.from_url(url)
     else:
-        r = redis.Redis(host='localhost', port=6379, db=0)
+        redis_url = os.getenv('REDIS_URL', None)
+        if redis_url:
+            r = redis.Redis.from_url(redis_url)
+        else:
+            r = redis.Redis(host='localhost', port=6379, db=0)
     return r
 
 
@@ -125,4 +140,4 @@ def set_key(key, value, ex=None):
 def get_key(key):
     client = getRedisClient()
     value = client.get(key)
-    return value
+    return value.decode("utf-8")
