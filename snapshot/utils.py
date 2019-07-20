@@ -16,6 +16,7 @@ import redis
 from requests_toolbelt.multipart.encoder import MultipartEncoder
 
 PUBLIC_URL_KEY = 'snapshot:public_url'
+LICENSE_PLATE_KEY = 'snapshot:license_plate'
 FILE_NAME = "img.png"
 
 
@@ -64,17 +65,19 @@ def upload_image_remote(data):
     return upload_file_dropbox_and_get_public_url(path_file, fs.name)
 
 
-def recognize_license_place(url):
+def recognize_license_plate(url):
     def parse_response(response):
         data = response.json()
         if data:
+            license_plate = data[0].get('plate')
+            set_key(LICENSE_PLATE_KEY, license_plate)
             return {
-                'license_place': data[0].get('plate'),
+                'license_plate': license_plate,
                 'status_code': response.status_code,
                 'response': data,
             }
         return {
-            'license_place': 'Not recognized.',
+            'license_plate': 'Not recognized.',
             'status_code': response.status_code,
             'response': data,
         }
@@ -89,9 +92,9 @@ def recognize_license_place(url):
     return json.dumps(parse_response(response))
 
 
-def upload_image_and_recognize_license_place(data):
+def upload_image_and_recognize_license_plate(data):
     public_url = upload_image_remote(data)
-    return recognize_license_place(public_url)
+    return recognize_license_plate(public_url)
 
 
 def get_result(work_id):
@@ -114,9 +117,9 @@ def getRedisClient():
     return r
 
 
-def set_key(key, value):
+def set_key(key, value, ex=None):
     client = getRedisClient()
-    client.set(key, value)
+    client.set(key, value, ex)
 
 
 def get_key(key):

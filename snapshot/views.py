@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 
 from snapshot.utils import get_result, set_key
-from snapshot.tasks import recognize_license_place_task
+from snapshot.tasks import recognize_license_plate_task
 
 snapshot_key = 'snapshot:work_id'
 
@@ -19,7 +19,7 @@ class Home(View):
 
     def post(self, request, *args, **kwargs):
         data = request._post.get('image_input').split('data:image/png;base64,')[1]
-        work = recognize_license_place_task.delay(data)
+        work = recognize_license_plate_task.delay(data)
         set_key(snapshot_key, work.id)
         return HttpResponseRedirect(reverse('snapshot:result', kwargs={'work_id': work.id}))
 
