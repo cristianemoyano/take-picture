@@ -16,5 +16,8 @@ h-celery:
 h-logs:
 	heroku logs --tail
 
-deploy:
+h-deploy:
 	git push heroku master
+
+h-shell:
+	heroku run bash
