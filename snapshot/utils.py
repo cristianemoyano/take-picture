@@ -2,7 +2,6 @@ import os
 import json
 import requests
 
-from django.conf import settings
 import redis
 
 from celery.result import AsyncResult
@@ -13,8 +12,7 @@ import logging
 
 def upload(filename):
     api_url = 'http://patent-recognizer.herokuapp.com/'
-    file_path = os.path.join(settings.BASE_DIR, filename)
-    with open(file_path, 'rb') as file:
+    with open(filename, 'rb') as file:
         multipart_data = MultipartEncoder(
             fields={
                 '': (filename, file, 'image/png'),
