@@ -66,7 +66,7 @@ def upload_image_remote(data):
 
 def recognize_license_place(url):
     def parse_response(response):
-        text = response.text
+        text = response.json()
         if text:
             return {
                 'license_place': text.get('plate'),
@@ -76,7 +76,7 @@ def recognize_license_place(url):
         return {
             'license_place': 'Not recognized.',
             'status_code': response.status_code,
-            'response': response.text,
+            'response': text,
         }
     api_url = 'http://patent-recognizer.herokuapp.com/'
     with urlopen(url) as file:
