@@ -1,3 +1,4 @@
+import os
 import json
 import requests
 
@@ -34,12 +35,21 @@ def get_result(work_id):
     return "The result is not ready yet. Please wait. You can refresh this page to ask for the result."
 
 
+def getRedisClient():
+    redis_url = os.getenv('REDIS_URL', None)
+    if redis_url:
+        r = redis.Redis.from_url(redis_url)
+    else:
+        r = redis.Redis(host='localhost', port=6379, db=0)
+    return r
+
+
 def set_key(key, value):
-    r = redis.Redis(host='localhost', port=6379, db=0)
-    r.set(key, value)
+    client = getRedisClient()
+    client.set(key, value)
 
 
 def get_key(key):
-    r = redis.Redis(host='localhost', port=6379, db=0)
-    value = r.get('key')
+    client = getRedisClient()
+    value = client.get('key')
     return value
