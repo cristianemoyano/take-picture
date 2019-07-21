@@ -29,7 +29,7 @@
 
 <body>
     <h1 style="text-align: center;">
-        Results
+        Search Plate by Code
     </h1>
     <h2>
         {% if user.is_authenticated %}
@@ -43,15 +43,12 @@
         {% endif %}
     </h2>
 
-    
     <div class="center">
-    	
-    	<ul>
-    		<li>Work ID: {{ work_id }}</li>
-    		<li>Message: {{ msg }}</li>
-    		<li>Car: {{ car }}</li>
-    		<li>License plate: {{ license_plate }}</li>
-    	</ul>
+        <form method="POST" action="">
+        {% csrf_token %}
+          <input id="plate_code" name="plate_code" type="text" placeholder="Enter license plate" width="100%">
+          <input id="search" type="submit" value="Search" name="submit" class="upload" />
+        </form>
     </div>
 
 

@@ -34,6 +34,8 @@
         {% if user.is_authenticated %}
             Hi {{ user.username }}!
             <p><a href="{% url 'logout' %}">logout</a></p>
+            <p><a href="{% url 'snapshot:home' %}">Recognize</a></p>
+            <p><a href="{% url 'snapshot:search' %}">Search by Code</a></p>
         {% else %}
           <p>You are not logged in</p>
           <a href="{% url 'login' %}">login</a>

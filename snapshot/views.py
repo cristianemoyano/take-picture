@@ -7,13 +7,13 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
-from snapshot.utils import get_result, set_key
+from snapshot.utils import get_result, set_key, get_car
 from snapshot.tasks import recognize_license_plate_task
 
 snapshot_key = 'snapshot:work_id'
 
 
-class Home(LoginRequiredMixin, View):
+class RecognizeView(LoginRequiredMixin, View):
     template_name = 'snapshot/index.html'
 
     def get(self, request, *args, **kwargs):
@@ -26,7 +26,7 @@ class Home(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse('snapshot:result', kwargs={'work_id': work.id}))
 
 
-class Result(LoginRequiredMixin, View):
+class ResultRecognizeView(LoginRequiredMixin, View):
     template_name = 'snapshot/result.html'
 
     def get(self, request, *args, **kwargs):
@@ -44,3 +44,28 @@ class Result(LoginRequiredMixin, View):
             }
             return render(request, self.template_name, data)
         return render(request, self.template_name, parsed_data)
+
+
+class SearchPlateByCodeView(LoginRequiredMixin, View):
+    template_name = 'snapshot/search_plate.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {})
+
+    def post(self, request, *args, **kwargs):
+        plate_code = request._post.get('plate_code')
+        return HttpResponseRedirect(reverse('snapshot:result-plate', kwargs={'plate_code': plate_code}))
+
+
+class ResultByCode(LoginRequiredMixin, View):
+    template_name = 'snapshot/result_by_code.html'
+
+    def get(self, request, *args, **kwargs):
+        plate = kwargs.get('plate_code')
+        if plate is not None:
+            car = get_car(plate)
+            data = {
+                'car': str(car),
+            }
+            return render(request, self.template_name, data)
+        return render(request, self.template_name, {})
