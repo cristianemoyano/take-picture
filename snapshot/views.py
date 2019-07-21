@@ -61,11 +61,13 @@ class ResultByCode(LoginRequiredMixin, View):
     template_name = 'snapshot/result_by_code.html'
 
     def get(self, request, *args, **kwargs):
-        plate = kwargs.get('plate_code')
+        plate_request = kwargs.get('plate_code')
+        plate = str(plate_request).strip().upper()
         if plate is not None:
             car = get_car(plate)
             data = {
                 'car': str(car),
+                'plate': plate,
             }
             return render(request, self.template_name, data)
         return render(request, self.template_name, {})
